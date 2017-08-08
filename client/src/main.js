@@ -7,6 +7,19 @@ import router from './router'
 
 Vue.config.productionTip = false
 Vue.prototype.$http = axios
+
+router.beforeEach((to, from, next) => {
+  if (to.meta.requireAuth) {
+    const authUser = JSON.parse(window.localStorage.getItem('authUser'))
+    if (authUser && authUser.accessToken) {
+      next()
+    } else {
+      next({name: 'home'})
+    }
+  }
+  next()
+})
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
