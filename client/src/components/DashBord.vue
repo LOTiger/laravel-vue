@@ -1,5 +1,5 @@
 <template>
-  <h1>success</h1>
+  <h1>dashbord</h1>
 </template>
 
 <script>
