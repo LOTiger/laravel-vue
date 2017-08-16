@@ -30,6 +30,7 @@ export default {
       const authUser = {}
       this.$http.post(loginUrl, postData)
         .then(response => {
+          console.log('get return:', response)
           if (response.status === 200) {
             authUser.accessToken = response.data.access_token
             authUser.refreshToken = response.data.refresh_token

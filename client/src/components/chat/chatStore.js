@@ -49,6 +49,9 @@ const actions = {
         console.log('ready to add new conversation:', response.data.data)
         commit('ADD_CHAT_TO_CONVERSATION', response.data.data)
       })
+  },
+  newIncomingChat: ({commit}, message) => {
+    commit('ADD_CHAT_TO_CONVERSATION', message)
   }
 }
 

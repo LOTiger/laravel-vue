@@ -1,8 +1,6 @@
 <?php
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Input;
-use App\User;
 
 Route::get('test', function () {
     return response([1,2,3,4],200);

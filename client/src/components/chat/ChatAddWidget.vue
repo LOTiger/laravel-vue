@@ -1,14 +1,32 @@
 <script>
   import {mapState} from 'vuex'
+  import Pusher from 'pusher-js'
   export default {
+    created () {
+      this.pusher = new Pusher('4bc37cf2c85e173191c4', {
+        encrypted: true,
+        cluster: 'ap1'
+      })
+      let that = this
+      this.channel = this.pusher.subscribe('chat_channel')
+      this.channel.bind('chat_saved', function (data) {
+        that.$emit('incoming_chat', data)
+      })
+      this.$on('incoming_chat', function (chatMessage) {
+        this.incomingChat(chatMessage)
+      })
+    },
     computed: {
       ...mapState({
-        chatStore: state => state.chatStore
+        chatStore: state => state.chatStore,
+        userStore: state => state.userStore
       })
     },
     data () {
       return {
-        message: null
+        message: null,
+        pusher: null,
+        channel: null
       }
     },
     methods: {
@@ -22,7 +40,22 @@
           this.$store.dispatch('addNewChatToConversation', postData)
             .then(response => {
               this.message = null
+              let element = document.getElementById('add-chat')
+              element.scrollIntoView(false)
             })
+        }
+      },
+      incomingChat (chatMessage) {
+        if (this.chatStore.currentChatUser.id === chatMessage.message.sender_id) {
+          if (this.userStore.authUser.email === chatMessage.message.receiver.email) {
+            this.$store.dispatch('newIncomingChat', chatMessage.message)
+              .then(res => {
+                let element = document.getElementById('add-chat')
+                element.scrollIntoView(false)
+              })
+          } else {
+            console.log('Message for some other user')
+          }
         }
       }
     }
